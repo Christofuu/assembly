@@ -47,15 +47,15 @@ moveChars:
  // End of setup.  
  
 //  Your sorting code goes here. 
+    mov R2, #4              // Offset of the vector to sort.
+    bubblesort:
     ldr R1, = #sortVector   // Address of the vector to sort.
-    mov R2, #0              // Offset of the vector to sort.
+    mov r0, #0
+    bal swap
+    /* counts how many swaps occured */
     swap:
-    /* set counter register */
-    
     /* load R6 with first value in string */
-    ldr R6, [R1, R2]
-    /* increment counter */
-    add R2, R2, #4
+    ldr R6, [R1]
     /* load R7 with next value in string */
     ldr R7, [R1, R2]
     
@@ -65,6 +65,7 @@ moveChars:
     cmp R6, R7
     blt swapVal
     
+    add R1, R1, #4
     bal swap
     
     swapVal:
@@ -73,7 +74,8 @@ moveChars:
     mov R7, R5
     str R6, [R1]
     str R7, [R1, R2]
-    
+    /* indicates if a swap occurred */
+    add R0, R0, #1
     add R1, R1, #4
     
     
@@ -81,6 +83,8 @@ moveChars:
     bne swap
     
     exitcode:
+    cmp R0, #0
+    bne bubblesort
     mov PC,LR  // Return to calling routine.
     
 
@@ -90,8 +94,7 @@ moveChars:
 .end asmFunction
    
 /**********************************************************************/   
-.end
-           
+.end 
 
 
 
